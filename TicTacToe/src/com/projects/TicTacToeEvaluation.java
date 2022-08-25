@@ -50,4 +50,14 @@ public class TicTacToeEvaluation {
 		}
 	}
 	
+	public static boolean isGameOver(char[] position) {
+		boolean isGameOver = true;
+		for (char ch:position) {
+			if (ch == ' ') {
+				isGameOver = false;
+			}
+		}
+		return isGameOver;
+	}
+	
 }

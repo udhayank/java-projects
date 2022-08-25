@@ -7,6 +7,16 @@ public class TicTacToeTerminal {
 	public static void main(String[] args) {
 		
 		Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("1 - 1 Player (vs CPU)");		
+		System.out.println("2 - 2 Player");
+		System.out.print("Enter your choice: ");
+		int choice = scanner.nextInt();
+		if (!(choice == 1 || choice == 2)) {
+			System.out.println("Invalid choice");
+			scanner.close();
+			return;
+		}
 						
 		TicTacToeBoard board = new TicTacToeBoard();
 		
@@ -19,23 +29,22 @@ public class TicTacToeTerminal {
 			if (gameStatus[0]) {
 				gameStatus = xTurn(board, scanner);
 			} else {
-				gameStatus = oTurn(board, scanner);
+				if (choice == 1) {
+					gameStatus = cpuTurn(board, scanner);					
+				} else {
+					gameStatus = oTurn(board, scanner);					
+				}
 			}
 						
 		}
-		
-		System.out.println("Game over!");
-		board.printBoard();
-		
+						
 		scanner.close();
 		
 		
 	}
 	
 	static boolean[] xTurn(TicTacToeBoard board, Scanner scanner) {
-		
-//		Scanner scanner = new Scanner(System.in);
-		
+				
 		boolean isXTurn, isGameOver;
 		
 		System.out.println("X turn: ");
@@ -50,27 +59,21 @@ public class TicTacToeTerminal {
 			System.out.println("X wins");
 			board.printBoard();
 			isGameOver = true;
-//			scanner.close();
 			return new boolean[] {isXTurn, isGameOver};
 		}
 		
-		isGameOver = true;
-		for (int i=0; i<9; i++) {
-			if (board.getPosition()[i] == ' ') {
-				isGameOver = false;
-			}
-		}
-		
-//		scanner.close();
+		isGameOver = TicTacToeEvaluation.isGameOver(board.getPosition());
+		if (isGameOver) {
+			System.out.println("Game over!");
+			board.printBoard();
+		}		
 		
 		return new boolean[] {isXTurn, isGameOver}; 
 		
 	}
 	
 	static boolean[] oTurn(TicTacToeBoard board, Scanner scanner) {
-		
-//		Scanner scanner = new Scanner(System.in);
-		
+				
 		boolean isXTurn, isGameOver;
 		
 		System.out.println("O turn: ");
@@ -85,19 +88,35 @@ public class TicTacToeTerminal {
 			System.out.println("O wins");
 			board.printBoard();
 			isGameOver = true;
-//			scanner.close();
 			return new boolean[] {isXTurn, isGameOver};
 		}
 		
-		isGameOver = true;
-		for (int i=0; i<9; i++) {
-			if (board.getPosition()[i] == ' ') {
-				isGameOver = false;
-			}
+		isGameOver = TicTacToeEvaluation.isGameOver(board.getPosition());
+		if (isGameOver) {
+			System.out.println("Game over!");
+			board.printBoard();
+		}
+				
+		return new boolean[] {isXTurn, isGameOver}; 
+		
+	}
+	
+	static boolean[] cpuTurn(TicTacToeBoard board, Scanner scanner) {
+				
+		boolean isXTurn, isGameOver;
+				
+		int pos = TicTacToeBot.bestMove(board.getPosition());
+		
+		isXTurn = board.setOPosition(pos);
+		if (TicTacToeEvaluation.isOWin(board.getPosition())){
+			System.out.println("CPU wins");
+			board.printBoard();
+			isGameOver = true;
+			return new boolean[] {isXTurn, isGameOver};
 		}
 		
-//		scanner.close();
-		
+		isGameOver = TicTacToeEvaluation.isGameOver(board.getPosition());
+				
 		return new boolean[] {isXTurn, isGameOver}; 
 		
 	}
